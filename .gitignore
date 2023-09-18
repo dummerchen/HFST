@@ -140,6 +140,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
+=======
+.dmypy.json
+dmypy.json
+>>>>>>> origin/master
 
 # Pyre type checker
 .pyre/

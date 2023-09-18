@@ -42,4 +42,3 @@ If you encounter problems in training and testing, please refer to [KAIR](https:
 ## 5. Acknowledgement
 
 This repo borrows codes from [KAIR](https://github.com/cszn/KAIR) and the psnr module is borrowed from [MHCA](https://github.com/lilygeorgescu/MHCA)
-

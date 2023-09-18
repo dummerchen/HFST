@@ -1,0 +1,90 @@
+{
+    // classical image sr
+    "task": "train_braint_spsr_release_s4_d96_w5_n3",
+    "model": "plain",
+    // 7002 gpu id 从上到下是 0,2,3,1
+    "gpu_ids": [6,7],
+    "dist": true,
+
+    "scale": 4,       // broadcast to "datasets"
+    "n_channels": 1,
+    "maxn": 156,
+    "minn": 0,
+    "path": {
+        "root": "MR",
+        "pretrained_netG": null,
+        "pretrained_netE": null
+    },
+
+    "datasets": {
+        "train": {
+            "name": "train_dataset",
+            "dataset_type": "DatasetBrainSRT",
+            // path of H training dataset. DIV2K (800 training images) or  Flickr2K (2650 images)
+            "dataroot_H": ["../../Task01_BrainTumour/imagesTr/"],
+            "H_size": 240,
+            "dataloader_shuffle": true,
+            "dataloader_num_workers": 8,
+            // batch size 1 | 16 | 32 | 48 | 64 | 128. Total batch size =4x8=32 in SwinIR
+            "dataloader_batch_size":2
+        },
+        // validation
+        "test": {
+            "name": "test_dataset",
+            "dataset_type": "DatasetBrainSRT",
+            "H_size": 240,
+            "use_all_data": true,
+            "dataroot_H": ["../../Task01_BrainTumour/imagesTs/"]
+        },
+        "eval": {
+            "name": "eval_dataset",
+            "dataset_type": "DatasetBrainSRT",
+            "H_size": 240,
+            "use_all_data": true,
+            "dataroot_H": ["../../Task01_BrainTumour/imagesTe/"]
+        }
+    },
+
+    "netG": {
+        "net_type": "SPSRNet_release",
+        "img_size": 60,
+        "in_channel": 1,
+        "out_channel": 1,
+        "hidden_dim": 96,
+        "window_size": 5,
+        "layer_num":3,
+        "norm_layer": null,
+        "upscale": 4,
+        "upsample": "pixelshuffle"        // "pixelshuffle" | "pixelshuffledirect" | "nearest+conv" | null
+    },
+
+    "train": {
+        // 由于整除原因需要将图片分割然后拼接用来测试，tile为分割的大小等于L img size
+        "manual_seed": 3407,
+        "tile": null,
+        "G_lossfn_type": ['l1',"l1"],               // "l1" preferred | "l2sum" | "l2" | "ssim" | "charbonnier"
+        "G_lossfn_weight": [1,1],            // default
+
+        /* Exponential Moving Average for netG: set 0 to disable; default setting 0.999"*/
+        "E_decay": 0.999,
+
+        "G_optimizer_type": "adam",        // fixed, adam is enough
+        "G_optimizer_lr": 1e-4,
+        "G_optimizer_wd": 0,               // weight decay, default 0
+        "G_optimizer_clipgrad": 5,      //
+        "G_optimizer_reuse": true,
+        "G_scheduler_type": "MultiStepLR",
+        "G_scheduler_milestones": [30000,60000,75000],
+        "G_scheduler_gamma": 0.5,
+
+        "G_regularizer_orthstep": null,    // unused
+        "G_regularizer_clipstep": null,    // unused
+
+        "G_param_strict": true,
+        "E_param_strict": true,
+
+        "checkpoint_test": 2000,          // for testing /iter
+        "checkpoint_save": 2000,           // for saving model /iter
+        "checkpoint_print": 100         // for print  /iter
+    }
+}

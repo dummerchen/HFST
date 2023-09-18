@@ -1,0 +1,36 @@
+{
+    // classical image sr
+    "task": "test_ixit_spsr_release_s4_d96_w5_n3",
+    "scale": 4,       // broadcast to "datasets"
+    "n_channels": 1,
+    "maxn": 156,
+    "minn": 0,
+    'tile': 60,
+    "path": {
+        "root": './',
+        "pretrained_netG": 'MR/train_ixit_spsr_release_s4_d96_w5_n3/models/best/best_G.pth',
+        "pretrained_netE": null
+    },
+
+    "datasets": {
+        "test": {
+            "name": "test_dataset",
+            "dataset_type": "DatasetIXIT",
+            "H_size": 240,
+            "dataroot_H": ["/home/blf/IXI/T1/test/"]
+        }
+    },
+
+    "netG": {
+        "net_type": "SPSRNet_release",
+        "img_size": 60,
+        "in_channel": 1,
+        "out_channel": 1,
+        "hidden_dim": 96,
+        "window_size": 5,
+        "layer_num":3,
+        "norm_layer": null,
+        "upscale": 4,
+        "upsample": "pixelshuffle"        // "pixelshuffle" | "pixelshuffledirect" | "nearest+conv" | null
+    }
+}

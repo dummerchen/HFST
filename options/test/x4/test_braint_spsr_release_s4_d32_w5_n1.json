@@ -1,0 +1,35 @@
+{
+    // classical image sr
+    "task": "test_brain_spsr_release_s4_d32_w5_n1",
+    "scale": 4,       // broadcast to "datasets"
+    "n_channels": 1,
+    "maxn": 156,
+    "minn": 0,
+    "path": {
+        "root": './',
+        "pretrained_netG": 'MR/train_braint_spsr_release_s4_d32_w5_n1/models/best/best_G.pth',
+        "pretrained_netE": null
+    },
+
+    "datasets": {
+        "test": {
+            "name": "test_dataset",
+            "dataset_type": "DatasetBrainSRT",
+            "H_size": 240,
+            "dataroot_H": "../../Task01_BrainTumour/imagesTs/"
+        }
+    },
+
+    "netG": {
+        "net_type": "SPSRNet_release",
+        "img_size": 60,
+        "in_channel": 1,
+        "out_channel": 1,
+        "hidden_dim": 32,
+        "window_size": 5,
+        "layer_num":1,
+        "norm_layer": null,
+        "upscale": 4,
+        "upsample": "pixelshuffle"        // "pixelshuffle" | "pixelshuffledirect" | "nearest+conv" | null
+    }
+}
